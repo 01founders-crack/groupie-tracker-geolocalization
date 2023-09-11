@@ -331,6 +331,50 @@ h2 {
   background: rgb(39, 43, 51);
 }
 
+  /* Style for the search bar container */
+  .searchBar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  /* Style for the search input */
+  #artistSearch {
+    padding: 10px;
+    border: 1px solid #333; /* Dark border color */
+    border-radius: 5px;
+    width: 300px;
+    font-size: 16px;
+    margin-right: 10px;
+    background-color: #333; /* Dark background color */
+    color: #fff; /* Text color */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Dark shadow */
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  }
+
+  /* Style for the search input on focus */
+  #artistSearch:focus {
+    border-color: #007BFF; /* Blue border color when focused */
+    outline: none; /* Remove the default focus outline */
+    box-shadow: 0 2px 4px rgba(0, 123, 255, 0.5); /* Shadow when focused */
+  }
+
+  /* Style for the search button */
+  button {
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  /* Style for the search button on hover */
+  button:hover {
+    background-color: #0056b3;
+  }
+
 .footerFooter {
     display: flex;
     -moz-box-pack: center;
