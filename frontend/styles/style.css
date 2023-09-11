@@ -309,6 +309,28 @@ h2 {
     text-decoration: none;
 }
 
+.s2ID {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4.5rem 0px;
+  background: rgb(39, 43, 51);
+  min-height: calc(50vh - 60px);
+}
+
+.idTitle h1 {
+  color: white;
+  text-align: center;
+  font-size: 100px;
+  text-decoration: underline;
+  text-underline-offset: 25px;
+  text-decoration-color: yellow;
+}
+
+.idMain {
+  background: rgb(39, 43, 51);
+}
+
 .footerFooter {
     display: flex;
     -moz-box-pack: center;
