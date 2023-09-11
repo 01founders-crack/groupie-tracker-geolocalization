@@ -4,6 +4,7 @@
   <div class="s2Showcase">
     {{range .Artists}}
     <article class="musicShowcase flashcard">
+      <a href="/id">
       <div class="front">
         <div class="musicImg">
           <img src="{{.Image}}" alt="{{.Name}}" />
@@ -47,6 +48,7 @@
           </div>
         </div>
       </div>
+    </a>
     </article>
     {{end}}
   </div>
