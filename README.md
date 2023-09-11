@@ -1,1 +1,2 @@
-# groupie-tracker-geolocalization
+# groupie-tracker
+groupie-tracker
