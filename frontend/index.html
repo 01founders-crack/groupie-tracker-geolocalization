@@ -1,7 +1,7 @@
 {{define "title"}} Groupie Tracker {{end}} {{define "content"}}
 
 <section class="searchBar">
-  <input type="text" id="artistSearch" placeholder="Search for an artist...">
+  <input type="text" id="artistSearch" placeholder="Search for an artist..." />
   <button>Search</button>
 </section>
 
@@ -9,51 +9,52 @@
   <div class="s2Showcase">
     {{range .Artists}}
     <article class="musicShowcase flashcard">
-      <a href="/id">
-      <div class="front">
-        <div class="musicImg">
-          <img src="{{.Image}}" alt="{{.Name}}" />
-        </div>
-        <div class="musicContent">
-          <div class="section">
-            <h2>{{.Name}}</h2>
-            <span>Founded: {{.CreationDate}}</span>
-            <br />
-            <span>Debut Album: {{.FirstAlbum}}</span>
+      <a href="/group?={{.ID}}">
+        <div class="front">
+          <div class="musicImg">
+            <img src="{{.Image}}" alt="{{.Name}}" />
           </div>
-          <div class="section">
-            <span>Members:</span>
-            <ol>
-              {{range .Members}}
-              <li>{{.}}</li>
-              {{end}}
-            </ol>
+          <div class="musicContent">
+            <div class="section">
+              <h2>{{.Name}}</h2>
+              <span>Founded: {{.CreationDate}}</span>
+              <br />
+              <span>Debut Album: {{.FirstAlbum}}</span>
+            </div>
+            <div class="section">
+              <span>Members:</span>
+              <ol>
+                {{range .Members}}
+                <li>{{.}}</li>
+                {{end}}
+              </ol>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="back">
-        <div class="musicImg">
-          <img src="{{.Image}}" alt="{{.Name}}" />
-        </div>
-        <div class="musicContent">
-          <div class="section">
-            <h2 class="backText">{{.Name}}</h2>
+        <div class="back">
+          <div class="musicImg">
+            <img src="{{.Image}}" alt="{{.Name}}" />
           </div>
-          <div class="section backText">
-            <span>Related Dates and Locations:</span>
-            <ul>
-              {{with index $.RelationsData .ID}} {{range $location, $dates :=
-              .DatesLocations}}
-              <li>
-                <strong>{{ $location }}</strong>: {{range $dates}}{{.}}, {{end}}
-              </li>
-              {{end}} {{end}}
-            </ul>
+          <div class="musicContent">
+            <div class="section">
+              <h2 class="backText">{{.Name}}</h2>
+            </div>
+            <div class="section backText">
+              <span>Related Dates and Locations:</span>
+              <ul>
+                {{with index $.RelationsData .ID}} {{range $location, $dates :=
+                .DatesLocations}}
+                <li>
+                  <strong>{{ $location }}</strong>: {{range $dates}}{{.}},
+                  {{end}}
+                </li>
+                {{end}} {{end}}
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
-    </a>
+      </a>
     </article>
     {{end}}
   </div>

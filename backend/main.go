@@ -62,6 +62,21 @@ func renderTemplate(w http.ResponseWriter, tmpl string, data interface{}) {
 	}
 }
 
+func renderTemplateGroup(w http.ResponseWriter, tmpl string, data interface{}) {
+	tmpl = filepath.Join("frontend", tmpl+".html")
+	layout := filepath.Join("frontend", "layout.html")
+	t, err := template.ParseFiles(layout, tmpl)
+	if err != nil {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	err = t.ExecuteTemplate(w, "layout", data)
+	if err != nil {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	}
+}
+
+
 func handleNotFound(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path == "/" {
 		combinedData, err := handlers.GetArtistsWithRelations()
@@ -84,5 +99,5 @@ func handle500(w http.ResponseWriter, r *http.Request) {
 
 func handleID(w http.ResponseWriter, r *http.Request) {
 	data := struct{}{}
-	renderTemplate(w, "group", data)
+	renderTemplateGroup(w, "group", data)
 }
