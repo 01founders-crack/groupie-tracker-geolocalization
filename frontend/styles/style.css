@@ -1,10 +1,13 @@
 html {
     font-family:sans-serif;
     -ms-text-size-adjust:100%;
-    -webkit-text-size-adjust:100%
+    -webkit-text-size-adjust:100%;
+    scrollbar-color: rgb(39, 43, 51) yellow;
    }
 body {
-    margin:0
+    margin:0;
+    overflow-y: scroll;
+    overflow-x: hidden;
    }
    
    article,
@@ -331,35 +334,73 @@ h2 {
   background: rgb(39, 43, 51);
 }
 
-  /* Style for the search bar container */
+.idInfo {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.idImgContainer {
+  flex: 0 0 400px;
+}
+
+.idTextContainer {
+  flex: 1;
+  border: 2px solid white;
+  display: flex;
+  justify-content: space-between; 
+  padding: 20px;
+}
+
+.artistMembers,
+.tourDates {
+  list-style: none;
+  padding: 0;
+  flex: 1; 
+}
+
+.artistMembers li,
+.tourDates li {
+  margin-bottom: 10px; 
+  font-size: 18px; 
+  color: white;
+  margin-left: 20px;
+}
+
+.artistMembers h2,
+.tourDates h2 {
+  margin-top: 20px;
+  font-size: 24px;
+  color: yellow; 
+  text-decoration: underline;
+  text-underline-offset: 10px; 
+  text-decoration-color: yellow;
+}
+
   .searchBar {
     display: flex;
     align-items: center;
     margin-bottom: 20px;
   }
 
-  /* Style for the search input */
   #artistSearch {
     padding: 10px;
-    border: 1px solid #333; /* Dark border color */
+    border: 1px solid #333; 
     border-radius: 5px;
     width: 300px;
     font-size: 16px;
     margin-right: 10px;
-    background-color: #333; /* Dark background color */
-    color: #fff; /* Text color */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Dark shadow */
+    background-color: #333; 
+    color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   }
 
-  /* Style for the search input on focus */
   #artistSearch:focus {
-    border-color: #007BFF; /* Blue border color when focused */
-    outline: none; /* Remove the default focus outline */
-    box-shadow: 0 2px 4px rgba(0, 123, 255, 0.5); /* Shadow when focused */
+    border-color: #007BFF; 
+    outline: none; 
+    box-shadow: 0 2px 4px rgba(0, 123, 255, 0.5); 
   }
 
-  /* Style for the search button */
   button {
     padding: 10px 20px;
     background-color: #007BFF;
@@ -370,7 +411,6 @@ h2 {
     font-size: 16px;
   }
 
-  /* Style for the search button on hover */
   button:hover {
     background-color: #0056b3;
   }
@@ -424,7 +464,6 @@ h2 {
 }
 
 @media (max-width: 767px) {
-    /* Header */
     .headerNav {
       padding: 0.5rem;
     }
@@ -436,7 +475,6 @@ h2 {
         height: calc(40vh - 60px);
     }
     
-    /* Main */
     .s1Header {
       font-size: 3rem;
     }
@@ -455,18 +493,15 @@ h2 {
       font-size: 14px;
     }
     
-    /* Flashcard */
     .flashcard {
       width: 240px;
       height: 650px;
     }
     
-    /* Error Sections */
     .ErrorMain {
       font-size: 18px;
     }
     
-    /* Footer */
     .footerFooter {
       padding: 2rem 0;
     }
