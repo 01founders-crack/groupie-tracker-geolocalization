@@ -4,9 +4,11 @@ package main
 import (
 	"fmt"
 	"groupie-tracker/backend/handlers"
+	"groupie-tracker/backend/models"
 	"html/template"
 	"net/http"
 	"path/filepath"
+	"strconv"
 )
 
 func main() {
@@ -76,7 +78,6 @@ func renderTemplateGroup(w http.ResponseWriter, tmpl string, data interface{}) {
 	}
 }
 
-
 func handleNotFound(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path == "/" {
 		combinedData, err := handlers.GetArtistsWithRelations()
@@ -98,6 +99,65 @@ func handle500(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleID(w http.ResponseWriter, r *http.Request) {
-	data := struct{}{}
+	// Extract the artist ID query parameter from the URL
+	artistID := r.URL.Query().Get("id")
+
+	// Fetch the artist's data (if needed)
+	combinedData, err := handlers.GetArtistsWithRelations()
+	if err != nil {
+		fmt.Println("Error:", err)
+		http.Error(w, "Failed to retrieve data", http.StatusInternalServerError)
+		return
+	}
+	type RelationsData struct {
+		ID             int
+		DatesLocations map[string][]string
+	}
+
+	// Find the artist's relations by their ID
+	// artistRelations, found := getArtistRelationsByID(combinedData, artistID)
+	// if !found {
+	//     fmt.Println("Artist relations not found for ID:", artistID)
+	//     http.Error(w, "Artist relations not found", http.StatusNotFound)
+	//     return
+	// }
+	var tempRelations map[string][]string
+	var tempArtist models.Artist
+	for _, artist := range combinedData.Artists {
+		if strconv.Itoa(artist.ID) == artistID {
+			//fmt.Println(combinedData.RelationsData[artist.ID], "::::ERKEKLERLE GEZDIM ABI")
+			tempRelations = combinedData.RelationsData[artist.ID].DatesLocations
+
+			//fmt.Println(artist, "::::ERKEKLERLE GEZDIM ABI")
+			tempArtist = artist
+		}
+	}
+	//fmt.Println(":::::ADSAADS",tempRelations,":::::::::ADSDSADS")
+	// Pass the artist relations data to the template
+	data := struct {
+		GroupID        string
+		Image          string
+		Name           string
+		Members        []string
+		CreationDate   int
+		FirstAlbum     string
+		Locations      string
+		ConcertDates   string
+		Relations      string
+		DatesLocations map[string][]string // Add a field for dates and locations
+	}{
+		GroupID:        artistID,
+		Image:          tempArtist.Image,
+		Name:           tempArtist.Name,
+		Members:        tempArtist.Members,
+		CreationDate:   tempArtist.CreationDate,
+		FirstAlbum:     tempArtist.FirstAlbum,
+		Locations:      tempArtist.Locations,
+		ConcertDates:   tempArtist.ConcertDates,
+		Relations:      tempArtist.Relations,
+		DatesLocations: tempRelations, // Access dates and locations from artistRelations
+	}
+
+	// Pass data to the 'group.html' template
 	renderTemplateGroup(w, "group", data)
 }
