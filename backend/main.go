@@ -14,7 +14,7 @@ func main() {
 	http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("./frontend/images"))))
 
 	http.HandleFunc("/", handleNotFound)
-	http.HandleFunc("/id", handleID)
+	http.HandleFunc("/group", handleID)
 	http.HandleFunc("/500", handle500)
 
 	go func() {
@@ -84,5 +84,5 @@ func handle500(w http.ResponseWriter, r *http.Request) {
 
 func handleID(w http.ResponseWriter, r *http.Request) {
 	data := struct{}{}
-	renderTemplate(w, "id", data)
+	renderTemplate(w, "group", data)
 }
