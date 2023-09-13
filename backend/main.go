@@ -4,6 +4,7 @@ package main
 import (
 	"fmt"
 	"groupie-tracker/backend/handlers"
+	"groupie-tracker/backend/mapboxgeo"
 	"groupie-tracker/backend/models"
 	"html/template"
 	"net/http"
@@ -114,6 +115,9 @@ func handleID(w http.ResponseWriter, r *http.Request) {
 		DatesLocations map[string][]string
 	}
 
+	//v := url.Values{}
+	
+
 	// Find the artist's relations by their ID
 	// artistRelations, found := getArtistRelationsByID(combinedData, artistID)
 	// if !found {
@@ -158,6 +162,11 @@ func handleID(w http.ResponseWriter, r *http.Request) {
 		DatesLocations: tempRelations, // Access dates and locations from artistRelations
 	}
 
+	//MAP
+	accessToken := "YOUR_TOKEN_HERE1"
+	CoordinatesArr := mapboxgeo.ReturnLocationCoordinates(tempRelations,accessToken)
+
+	fmt.Println(CoordinatesArr)
 	// Pass data to the 'group.html' template
 	renderTemplateGroup(w, "group", data)
 }
