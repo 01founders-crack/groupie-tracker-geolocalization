@@ -48,27 +48,28 @@ func GetLocationCenterCoordinates(location string, accessToken string) ([]float6
 
 
 
-func ReturnLocationCoordinates(tempRelations map[string][]string, accessToken string) [][]float64  {
-	//MAP DATA
-    //location := "London, UK"
-    // Call the function from your package
-	var LocationsArr []string 
+type Location struct {
+	Lat float64 `json:"lat"`
+	Lng float64 `json:"lng"`
+}
+
+func ReturnLocationCoordinates(tempRelations map[string][]string, accessToken string) []Location {
+	var LocationsArr []string
 	for key := range tempRelations {
 		LocationsArr = append(LocationsArr, key)
-		fmt.Println(key,":::::::")
+		fmt.Println(key, ":::::::")
 	}
-	var CoordinatesArr [][]float64
+	var CoordinatesArr []Location
 
 	for _, location := range LocationsArr {
 		coordinates, err := GetLocationCenterCoordinates(location, accessToken)
-    if err != nil {
-        fmt.Println("Error:", err)  
-    } else {
-		CoordinatesArr =append(CoordinatesArr, coordinates)
+		if err != nil {
+			fmt.Println("Error:", err)
+		} else {
+			CoordinatesArr = append(CoordinatesArr, Location{Lat: coordinates[0], Lng: coordinates[1]})
+		}
+		fmt.Printf("Center coordinates for %s: [%f, %f]\n", location, coordinates[0], coordinates[1])
 	}
-    fmt.Printf("Center coordinates for %s: [%f, %f]\n", location, coordinates[0], coordinates[1])
-	}
-    
 
 	return CoordinatesArr
 }

@@ -7,9 +7,12 @@ import (
 	"groupie-tracker/backend/mapboxgeo"
 	"groupie-tracker/backend/models"
 	"html/template"
+	"io/ioutil"
 	"net/http"
+	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 )
 
 func main() {
@@ -129,13 +132,28 @@ func handleID(w http.ResponseWriter, r *http.Request) {
 	var tempArtist models.Artist
 	for _, artist := range combinedData.Artists {
 		if strconv.Itoa(artist.ID) == artistID {
-			//fmt.Println(combinedData.RelationsData[artist.ID], "::::ERKEKLERLE GEZDIM ABI")
 			tempRelations = combinedData.RelationsData[artist.ID].DatesLocations
-
-			//fmt.Println(artist, "::::ERKEKLERLE GEZDIM ABI")
 			tempArtist = artist
 		}
 	}
+
+ // Load environment variables from .env file
+ if err := loadEnv(".env"); err != nil {
+	fmt.Println("Error loading .env file:", err)
+	return
+}
+	accessToken := os.Getenv("ACCESS_TOKEN")
+	gMapsToken := os.Getenv("GMAPS_TOKEN")
+
+    // Check if the access token is empty or not set
+    if accessToken == "" || gMapsToken == "" {
+        fmt.Println("Access token not found in environment variable ACCESS_TOKEN or GMAPS_TOKEN")
+        // Handle the case where the access token is missing or empty
+        return
+    }
+
+	CoordinatesArr := mapboxgeo.ReturnLocationCoordinates(tempRelations,accessToken)
+
 	//fmt.Println(":::::ADSAADS",tempRelations,":::::::::ADSDSADS")
 	// Pass the artist relations data to the template
 	data := struct {
@@ -149,6 +167,8 @@ func handleID(w http.ResponseWriter, r *http.Request) {
 		ConcertDates   string
 		Relations      string
 		DatesLocations map[string][]string // Add a field for dates and locations
+		CoordinatesArr []mapboxgeo.Location
+		GMapsToken string
 	}{
 		GroupID:        artistID,
 		Image:          tempArtist.Image,
@@ -160,13 +180,33 @@ func handleID(w http.ResponseWriter, r *http.Request) {
 		ConcertDates:   tempArtist.ConcertDates,
 		Relations:      tempArtist.Relations,
 		DatesLocations: tempRelations, // Access dates and locations from artistRelations
+		CoordinatesArr: CoordinatesArr,
+		GMapsToken: gMapsToken,
 	}
 
-	//MAP
-	accessToken := "YOUR_TOKEN_HERE1"
-	CoordinatesArr := mapboxgeo.ReturnLocationCoordinates(tempRelations,accessToken)
 
 	fmt.Println(CoordinatesArr)
 	// Pass data to the 'group.html' template
 	renderTemplateGroup(w, "group", data)
+}
+
+
+// Load environment variables from a file
+func loadEnv(envFile string) error {
+    content, err := ioutil.ReadFile(envFile)
+    if err != nil {
+        return err
+    }
+
+    lines := strings.Split(string(content), "\n")
+    for _, line := range lines {
+        parts := strings.SplitN(line, "=", 2)
+        if len(parts) == 2 {
+            key := strings.TrimSpace(parts[0])
+            value := strings.TrimSpace(parts[1])
+            os.Setenv(key, value)
+        }
+    }
+
+    return nil
 }
