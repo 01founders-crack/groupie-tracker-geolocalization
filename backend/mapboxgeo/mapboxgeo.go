@@ -46,8 +46,6 @@ func GetLocationCenterCoordinates(location string, accessToken string) ([]float6
 	return nil, fmt.Errorf("Location not found")
 }
 
-
-
 type Location struct {
 	Lat float64 `json:"lat"`
 	Lng float64 `json:"lng"`

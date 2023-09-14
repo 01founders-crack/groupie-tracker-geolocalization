@@ -15,16 +15,21 @@ import (
 )
 
 func main() {
+	// Serve static files and set up routes
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./frontend/styles"))))
 	http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("./frontend/images"))))
-
 	http.HandleFunc("/", handleNotFound)
 	http.HandleFunc("/group", handleID)
 	http.HandleFunc("/500", handle500)
 
-	port := "3000"
-	println("Server listening on port http://localhost:" + port)
-	http.ListenAndServe(":"+port, nil)
+	port := "443"
+	println("Server listening on port https://localhost:" + port)
+
+	// Serve the application over HTTPS with HTTP/2 support
+	err := http.ListenAndServeTLS(":"+port, "certificates/server.crt", "certificates/server.key", nil)
+	if err != nil {
+		fmt.Println("Error:", err)
+	}
 }
 
 func renderTemplate(w http.ResponseWriter, tmpl string, data interface{}) {
@@ -100,22 +105,22 @@ func handleID(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
- // Load environment variables from .env file
- if err := loadEnv(".env"); err != nil {
-	fmt.Println("Error loading .env file:", err)
-	return
-}
+	// Load environment variables from .env file
+	if err := loadEnv(".env"); err != nil {
+		fmt.Println("Error loading .env file:", err)
+		return
+	}
 	accessToken := os.Getenv("ACCESS_TOKEN")
 	gMapsToken := os.Getenv("GMAPS_TOKEN")
 
-    // Check if the access token is empty or not set
-    if accessToken == "" || gMapsToken == "" {
-        fmt.Println("Access token not found in environment variable ACCESS_TOKEN or GMAPS_TOKEN")
-        // Handle the case where the access token is missing or empty
-        return
-    }
+	// Check if the access token is empty or not set
+	if accessToken == "" || gMapsToken == "" {
+		fmt.Println("Access token not found in environment variable ACCESS_TOKEN or GMAPS_TOKEN")
+		// Handle the case where the access token is missing or empty
+		return
+	}
 
-	CoordinatesArr := mapboxgeo.ReturnLocationCoordinates(tempRelations,accessToken)
+	CoordinatesArr := mapboxgeo.ReturnLocationCoordinates(tempRelations, accessToken)
 
 	// Pass the artist relations data to the template
 	data := struct {
@@ -130,7 +135,7 @@ func handleID(w http.ResponseWriter, r *http.Request) {
 		Relations      string
 		DatesLocations map[string][]string // Add a field for dates and locations
 		CoordinatesArr []mapboxgeo.Location
-		GMapsToken string
+		GMapsToken     string
 	}{
 		GroupID:        artistID,
 		Image:          tempArtist.Image,
@@ -143,31 +148,29 @@ func handleID(w http.ResponseWriter, r *http.Request) {
 		Relations:      tempArtist.Relations,
 		DatesLocations: tempRelations, // Access dates and locations from artistRelations
 		CoordinatesArr: CoordinatesArr,
-		GMapsToken: gMapsToken,
+		GMapsToken:     gMapsToken,
 	}
-
 
 	// Pass data to the 'group.html' template
 	renderTemplateGroup(w, "group", data)
 }
 
-
 // Load environment variables from a file
 func loadEnv(envFile string) error {
-    content, err := os.ReadFile(envFile)
-    if err != nil {
-        return err
-    }
+	content, err := os.ReadFile(envFile)
+	if err != nil {
+		return err
+	}
 
-    lines := strings.Split(string(content), "\n")
-    for _, line := range lines {
-        parts := strings.SplitN(line, "=", 2)
-        if len(parts) == 2 {
-            key := strings.TrimSpace(parts[0])
-            value := strings.TrimSpace(parts[1])
-            os.Setenv(key, value)
-        }
-    }
+	lines := strings.Split(string(content), "\n")
+	for _, line := range lines {
+		parts := strings.SplitN(line, "=", 2)
+		if len(parts) == 2 {
+			key := strings.TrimSpace(parts[0])
+			value := strings.TrimSpace(parts[1])
+			os.Setenv(key, value)
+		}
+	}
 
-    return nil
+	return nil
 }
