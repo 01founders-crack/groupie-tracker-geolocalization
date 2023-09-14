@@ -4,21 +4,26 @@ package main
 import (
 	"fmt"
 	"groupie-tracker/backend/handlers"
+	"groupie-tracker/backend/helpers"
 	"groupie-tracker/backend/mapboxgeo"
 	"groupie-tracker/backend/models"
+
 	"html/template"
 	"net/http"
-	"os"
 	"path/filepath"
 	"strconv"
-	"strings"
 )
+
+type RelationsData struct {
+	ID             int
+	DatesLocations map[string][]string
+}
 
 func main() {
 	// Serve static files and set up routes
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./frontend/styles"))))
 	http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("./frontend/images"))))
-	http.HandleFunc("/", handleNotFound)
+	http.HandleFunc("/", handleRoot)
 	http.HandleFunc("/group", handleID)
 	http.HandleFunc("/500", handle500)
 
@@ -60,7 +65,7 @@ func renderTemplateGroup(w http.ResponseWriter, tmpl string, data interface{}) {
 	}
 }
 
-func handleNotFound(w http.ResponseWriter, r *http.Request) {
+func handleRoot(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path == "/" {
 		combinedData, err := handlers.GetArtistsWithRelations()
 		if err != nil {
@@ -91,10 +96,6 @@ func handleID(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to retrieve data", http.StatusInternalServerError)
 		return
 	}
-	type RelationsData struct {
-		ID             int
-		DatesLocations map[string][]string
-	}
 
 	var tempRelations map[string][]string
 	var tempArtist models.Artist
@@ -104,22 +105,11 @@ func handleID(w http.ResponseWriter, r *http.Request) {
 			tempArtist = artist
 		}
 	}
+	
+	//accessToken, gMapsToken from .env file
+	accessToken, gMapsToken := helpers.InitEnv()
 
-	// Load environment variables from .env file
-	if err := loadEnv(".env"); err != nil {
-		fmt.Println("Error loading .env file:", err)
-		return
-	}
-	accessToken := os.Getenv("ACCESS_TOKEN")
-	gMapsToken := os.Getenv("GMAPS_TOKEN")
-
-	// Check if the access token is empty or not set
-	if accessToken == "" || gMapsToken == "" {
-		fmt.Println("Access token not found in environment variable ACCESS_TOKEN or GMAPS_TOKEN")
-		// Handle the case where the access token is missing or empty
-		return
-	}
-
+	//ReturnLocationCoordinates
 	CoordinatesArr := mapboxgeo.ReturnLocationCoordinates(tempRelations, accessToken)
 
 	// Pass the artist relations data to the template
@@ -150,27 +140,6 @@ func handleID(w http.ResponseWriter, r *http.Request) {
 		CoordinatesArr: CoordinatesArr,
 		GMapsToken:     gMapsToken,
 	}
-
 	// Pass data to the 'group.html' template
 	renderTemplateGroup(w, "group", data)
-}
-
-// Load environment variables from a file
-func loadEnv(envFile string) error {
-	content, err := os.ReadFile(envFile)
-	if err != nil {
-		return err
-	}
-
-	lines := strings.Split(string(content), "\n")
-	for _, line := range lines {
-		parts := strings.SplitN(line, "=", 2)
-		if len(parts) == 2 {
-			key := strings.TrimSpace(parts[0])
-			value := strings.TrimSpace(parts[1])
-			os.Setenv(key, value)
-		}
-	}
-
-	return nil
 }
