@@ -47,6 +47,7 @@
     </div>
   </div>
 </section>
+
 <script
   async
   src="https://maps.googleapis.com/maps/api/js?key={{.GMapsToken}}&callback=initMap"
@@ -55,8 +56,7 @@
 <section class="map">
   <div
     id="google-maps-api-map"
-    style="width: 100%; height: 450"
-    style="border: 0"
+    style="width: 100%; height: 450px"
     allowfullscreen=""
     loading="lazy"
     referrerpolicy="no-referrer-when-downgrade"
@@ -64,25 +64,23 @@
 </section>
 
 <script>
-  var golangVar2 = [
-    "{{range .CoordinatesArr}}",
-    { lat: "{{.Lng}}", lng: "{{.Lat}}" },
-    "{{end}}",
-  ];
-  // remove "" and change the data types
-  var filteredArray = golangVar2
-    .filter(function (item) {
-      return item !== "";
-    })
-    .map(function (item) {
-      return {
-        lat: parseFloat(item.lat),
-        lng: parseFloat(item.lng),
-      };
-    });
-  //console.log(filteredArray[0]["lat"]);
-
   function initMap() {
+    var golangVar2 = [
+      "{{range .CoordinatesArr}}",
+      { lat: "{{.Lng}}", lng: "{{.Lat}}" },
+      "{{end}}",
+    ];
+    // remove "" and change the data types
+    var filteredArray = golangVar2
+      .filter(function (item) {
+        return item !== "";
+      })
+      .map(function (item) {
+        return {
+          lat: parseFloat(item.lat),
+          lng: parseFloat(item.lng),
+        };
+      });
     const map = new google.maps.Map(
       document.getElementById("google-maps-api-map"),
       {
