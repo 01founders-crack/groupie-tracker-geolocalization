@@ -113,20 +113,7 @@ func handleID(w http.ResponseWriter, r *http.Request) {
 	CoordinatesArr := mapboxgeo.ReturnLocationCoordinates(tempRelations, accessToken)
 
 	// Pass the artist relations data to the template
-	data := struct {
-		GroupID        string
-		Image          string
-		Name           string
-		Members        []string
-		CreationDate   int
-		FirstAlbum     string
-		Locations      string
-		ConcertDates   string
-		Relations      string
-		DatesLocations map[string][]string // Add a field for dates and locations
-		CoordinatesArr []mapboxgeo.Location
-		GMapsToken     string
-	}{
+	data := models.ArtistData{
 		GroupID:        artistID,
 		Image:          tempArtist.Image,
 		Name:           tempArtist.Name,
