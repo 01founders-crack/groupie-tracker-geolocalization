@@ -20,7 +20,8 @@ func main() {
 	http.HandleFunc("/", handlers.HandleRoot)
 	http.HandleFunc("/group", handlers.HandleGroup)
 	http.HandleFunc("/500", handlers.Handle500)
-	// if you need to add new page $create a new handler$ for that and go to $common.go$ in the handlers $add else if function$
+	// if you need to add new page $create a new handler$ for that in handlers folder
+	// If you added new components (more than one html file for one page) go to $common.go$ in the handlers $add else if function$ 
 
 	port := "443"
 	println("Server listening on port https://localhost:" + port)
