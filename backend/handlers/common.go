@@ -7,24 +7,27 @@ import (
 )
 
 func renderTemplate(w http.ResponseWriter, tmpl string, data interface{}) {
+	//Template variables
+	var t *template.Template
+	var err error
+
 	// Define the paths to the layout, header, footer, and the specific template
 	layoutPath := filepath.Join("frontend", "layout.html")
 	headerPath := filepath.Join("frontend", "header.html")
 	footerPath := filepath.Join("frontend", "footer.html")
 	templatePath := filepath.Join("frontend", tmpl+".html")
 
-	//Add new one to here
-	var t *template.Template
-	var err error
+	// Add new one to here with if else $If you come from main go and added new page$
+	// If you created only one html file for your page no need this area for more components
 	if tmpl == "index" {
 		musicCardPath := filepath.Join("frontend", "music_card.html")
-		t = templateParseFiles(w,layoutPath, headerPath, footerPath, templatePath, musicCardPath)
+		t = templateParseFiles(w, layoutPath, headerPath, footerPath, templatePath, musicCardPath)
 	} else if tmpl == "group" {
 		googleMapsPath := filepath.Join("frontend", "google_maps.html")
 		groupInfoPath := filepath.Join("frontend", "group_info.html")
-		t = templateParseFiles(w,layoutPath, headerPath, footerPath, templatePath, googleMapsPath, groupInfoPath)
+		t = templateParseFiles(w, layoutPath, headerPath, footerPath, templatePath, googleMapsPath, groupInfoPath)
 	} else {
-		t = templateParseFiles(w,layoutPath, headerPath, footerPath, templatePath)
+		t = templateParseFiles(w, layoutPath, headerPath, footerPath, templatePath)
 	}
 
 	// Execute the composed template
@@ -34,11 +37,11 @@ func renderTemplate(w http.ResponseWriter, tmpl string, data interface{}) {
 	}
 }
 
-func templateParseFiles(w http.ResponseWriter,filenames ...string) *template.Template {
-	t, err := template.ParseFiles(filenames ...)
-		if err != nil {
-			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-			// return
-		}
-		return t
+func templateParseFiles(w http.ResponseWriter, filenames ...string) *template.Template {
+	t, err := template.ParseFiles(filenames...)
+	if err != nil {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		// return
+	}
+	return t
 }
