@@ -80,17 +80,17 @@
         lng: parseFloat(item.lng),
       };
     });
-  console.log(filteredArray);
+  console.log(filteredArray[0]["lat"]);
 
   function initMap() {
     const map = new google.maps.Map(
       document.getElementById("google-maps-api-map"),
       {
         center: {
-          lat: 46.231226,
-          lng: 6.051737,
+          lat: filteredArray[0]["lat"],
+          lng: filteredArray[0]["lng"],
         },
-        zoom: 14,
+        zoom: 3,
       }
     );
 
