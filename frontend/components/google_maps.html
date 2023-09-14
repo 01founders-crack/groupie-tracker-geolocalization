@@ -22,7 +22,8 @@
       { lat: "{{.Lng}}", lng: "{{.Lat}}" },
       "{{end}}",
     ];
-    // remove "" and change the data types
+
+    // Remove empty strings and change the data types
     var filteredArray = golangVar2
       .filter(function (item) {
         return item !== "";
@@ -33,6 +34,7 @@
           lng: parseFloat(item.lng),
         };
       });
+
     const map = new google.maps.Map(
       document.getElementById("google-maps-api-map"),
       {
@@ -44,12 +46,23 @@
       }
     );
 
+    // Add markers for each location
     filteredArray.forEach((location) => {
       new google.maps.Marker({
         position: location,
         map: map,
       });
     });
+
+    // Draw lines connecting the markers
+    var pathCoordinates = new google.maps.Polyline({
+      path: filteredArray,
+      geodesic: true,
+      strokeColor: "#FF0000", // Red color
+      strokeOpacity: 1.0,
+      strokeWeight: 2,
+    });
+    pathCoordinates.setMap(map);
   }
 </script>
 <!-- MAPS END-->
