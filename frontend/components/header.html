@@ -1,8 +1,36 @@
 {{define "header"}}
 <head>
   <title>{{template "title" .}}</title>
+  <!-- Essential Meta Tags -->
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, shrink-to-fit=no"
+  />
+
+  <!-- SEO Meta Tags -->
+  <meta
+    name="description"
+    content="Discover comprehensive information on your favorite artists, albums, and tracks through The Music API."
+  />
+  <meta name="keywords" content="Music, API, Artists, Albums, Tracks" />
+  <meta name="author" content="01founderscrack" />
+
+  <!-- Social Media Meta Tags -->
+  <meta property="og:title" content="{{template "title" .}} - The Music API">
+  <meta
+    property="og:description"
+    content="Discover comprehensive information on your favorite artists, albums, and tracks."
+  />
+  <meta property="og:image" content="/images/01FCLogo.webp" />
+  <meta property="og:url" content="https://localhost" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
+
+  <!-- Stylesheets -->
   <link rel="stylesheet" href="/static/style.css" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body>
   <header class="headerHeader">
