@@ -7,7 +7,6 @@ import (
 	"groupie-tracker/backend/mapboxgeo"
 	"groupie-tracker/backend/models"
 	"html/template"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -23,36 +22,10 @@ func main() {
 	http.HandleFunc("/group", handleID)
 	http.HandleFunc("/500", handle500)
 
-	go func() {
-		_, err := handlers.GetArtists()
-		if err != nil {
-			fmt.Println("Error:", err)
-			return
-		}
-		fmt.Println("Artists Fetched")
-	}()
-
 	port := "3000"
 	println("Server listening on port http://localhost:" + port)
 	http.ListenAndServe(":"+port, nil)
 }
-
-/*
-func printRelatedDatesLocations(url string) {
-	relations, err := handlers.GetRelations(url)
-	if err != nil {
-		fmt.Println("Error:", err)
-		return
-	}
-	for location, relatedDatesLocations := range relations.DatesLocations {
-		fmt.Printf("location: %s\n", location)
-		fmt.Println("Related DatesLocations:")
-		for _, relatedDateL := range relatedDatesLocations {
-			fmt.Println(relatedDateL)
-		}
-	}
-}
-*/
 
 func renderTemplate(w http.ResponseWriter, tmpl string, data interface{}) {
 	tmpl = filepath.Join("frontend", tmpl+".html")
@@ -118,16 +91,6 @@ func handleID(w http.ResponseWriter, r *http.Request) {
 		DatesLocations map[string][]string
 	}
 
-	//v := url.Values{}
-	
-
-	// Find the artist's relations by their ID
-	// artistRelations, found := getArtistRelationsByID(combinedData, artistID)
-	// if !found {
-	//     fmt.Println("Artist relations not found for ID:", artistID)
-	//     http.Error(w, "Artist relations not found", http.StatusNotFound)
-	//     return
-	// }
 	var tempRelations map[string][]string
 	var tempArtist models.Artist
 	for _, artist := range combinedData.Artists {
@@ -154,7 +117,6 @@ func handleID(w http.ResponseWriter, r *http.Request) {
 
 	CoordinatesArr := mapboxgeo.ReturnLocationCoordinates(tempRelations,accessToken)
 
-	//fmt.Println(":::::ADSAADS",tempRelations,":::::::::ADSDSADS")
 	// Pass the artist relations data to the template
 	data := struct {
 		GroupID        string
@@ -185,7 +147,6 @@ func handleID(w http.ResponseWriter, r *http.Request) {
 	}
 
 
-	fmt.Println(CoordinatesArr)
 	// Pass data to the 'group.html' template
 	renderTemplateGroup(w, "group", data)
 }
@@ -193,7 +154,7 @@ func handleID(w http.ResponseWriter, r *http.Request) {
 
 // Load environment variables from a file
 func loadEnv(envFile string) error {
-    content, err := ioutil.ReadFile(envFile)
+    content, err := os.ReadFile(envFile)
     if err != nil {
         return err
     }

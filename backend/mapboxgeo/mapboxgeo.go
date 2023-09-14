@@ -57,7 +57,6 @@ func ReturnLocationCoordinates(tempRelations map[string][]string, accessToken st
 	var LocationsArr []string
 	for key := range tempRelations {
 		LocationsArr = append(LocationsArr, key)
-		fmt.Println(key, ":::::::")
 	}
 	var CoordinatesArr []Location
 
@@ -68,7 +67,7 @@ func ReturnLocationCoordinates(tempRelations map[string][]string, accessToken st
 		} else {
 			CoordinatesArr = append(CoordinatesArr, Location{Lat: coordinates[0], Lng: coordinates[1]})
 		}
-		fmt.Printf("Center coordinates for %s: [%f, %f]\n", location, coordinates[0], coordinates[1])
+		//fmt.Printf("Center coordinates for %s: [%f, %f]\n", location, coordinates[0], coordinates[1])
 	}
 
 	return CoordinatesArr
