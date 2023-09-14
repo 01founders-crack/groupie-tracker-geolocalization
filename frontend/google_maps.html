@@ -1,0 +1,56 @@
+{{define "google_maps"}}
+<!-- MAPS START-->
+<script
+  async
+  src="https://maps.googleapis.com/maps/api/js?key={{.GMapsToken}}&callback=initMap"
+></script>
+
+<section class="map">
+  <div
+    id="google-maps-api-map"
+    style="width: 100%; height: 450px"
+    allowfullscreen=""
+    loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade"
+  ></div>
+</section>
+
+<script>
+  function initMap() {
+    var golangVar2 = [
+      "{{range .CoordinatesArr}}",
+      { lat: "{{.Lng}}", lng: "{{.Lat}}" },
+      "{{end}}",
+    ];
+    // remove "" and change the data types
+    var filteredArray = golangVar2
+      .filter(function (item) {
+        return item !== "";
+      })
+      .map(function (item) {
+        return {
+          lat: parseFloat(item.lat),
+          lng: parseFloat(item.lng),
+        };
+      });
+    const map = new google.maps.Map(
+      document.getElementById("google-maps-api-map"),
+      {
+        center: {
+          lat: filteredArray[0]["lat"],
+          lng: filteredArray[0]["lng"],
+        },
+        zoom: 3,
+      }
+    );
+
+    filteredArray.forEach((location) => {
+      new google.maps.Marker({
+        position: location,
+        map: map,
+      });
+    });
+  }
+</script>
+<!-- MAPS END-->
+{{end}}

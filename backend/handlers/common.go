@@ -7,15 +7,38 @@ import (
 )
 
 func renderTemplate(w http.ResponseWriter, tmpl string, data interface{}) {
-	tmpl = filepath.Join("frontend", tmpl+".html")
-	layout := filepath.Join("frontend", "layout.html")
-	t, err := template.ParseFiles(layout, tmpl)
-	if err != nil {
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
+	// Define the paths to the layout, header, footer, and the specific template
+	layoutPath := filepath.Join("frontend", "layout.html")
+	headerPath := filepath.Join("frontend", "header.html")
+	footerPath := filepath.Join("frontend", "footer.html")
+	templatePath := filepath.Join("frontend", tmpl+".html")
+
+	//Add new one to here
+	var t *template.Template
+	var err error
+	if tmpl == "index" {
+		musicCardPath := filepath.Join("frontend", "music_card.html")
+		t = templateParseFiles(w,layoutPath, headerPath, footerPath, templatePath, musicCardPath)
+	} else if tmpl == "group" {
+		googleMapsPath := filepath.Join("frontend", "google_maps.html")
+		groupInfoPath := filepath.Join("frontend", "group_info.html")
+		t = templateParseFiles(w,layoutPath, headerPath, footerPath, templatePath, googleMapsPath, groupInfoPath)
+	} else {
+		t = templateParseFiles(w,layoutPath, headerPath, footerPath, templatePath)
 	}
+
+	// Execute the composed template
 	err = t.ExecuteTemplate(w, "layout", data)
 	if err != nil {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 	}
+}
+
+func templateParseFiles(w http.ResponseWriter,filenames ...string) *template.Template {
+	t, err := template.ParseFiles(filenames ...)
+		if err != nil {
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			// return
+		}
+		return t
 }

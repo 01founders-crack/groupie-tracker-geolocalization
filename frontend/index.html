@@ -5,58 +5,6 @@
   <button>Search</button>
 </section>
 
-<section class="s2">
-  <div class="s2Showcase">
-    {{range .Artists}}
-    <article class="musicShowcase flashcard">
-      <a href="/group?id={{.ID}}">
-        <div class="front">
-          <div class="musicImg">
-            <img src="{{.Image}}" alt="{{.Name}}" width="240" height="240" />
-          </div>
-          <div class="musicContent">
-            <div class="section">
-              <h2>{{.Name}}</h2>
-              <span>Founded: {{.CreationDate}}</span>
-              <br />
-              <span>Debut Album: {{.FirstAlbum}}</span>
-            </div>
-            <div class="section">
-              <span>Members:</span>
-              <ol>
-                {{range .Members}}
-                <li>{{.}}</li>
-                {{end}}
-              </ol>
-            </div>
-          </div>
-        </div>
+<section class="s2">{{template "music_card" .}}</section>
 
-        <div class="back">
-          <div class="musicImg">
-            <img src="{{.Image}}" alt="{{.Name}}" />
-          </div>
-          <div class="musicContent">
-            <div class="section">
-              <h2 class="backText">{{.Name}}</h2>
-            </div>
-            <div class="section backText">
-              <span>Related Dates and Locations:</span>
-              <ul>
-                {{with index $.RelationsData .ID}} {{range $location, $dates :=
-                .DatesLocations}}
-                <li>
-                  <strong>{{ $location }}</strong>: {{range $dates}}{{.}},
-                  {{end}}
-                </li>
-                {{end}} {{end}}
-              </ul>
-            </div>
-          </div>
-        </div>
-      </a>
-    </article>
-    {{end}}
-  </div>
-</section>
 {{end}}

@@ -1,0 +1,34 @@
+{{define "header"}}
+<head>
+  <title>{{template "title" .}}</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body>
+  <header class="headerHeader">
+    <nav class="headerNav">
+      <a aria-current="page" aria-label="home page" class="headerLink" href="/">
+        <img
+          src="images/01FCLogo.webp"
+          alt="Logo SVG"
+          width="40"
+          height="40"
+          viewbox="0 0 50 50"
+        />
+      </a>
+      <ul class="headerList">
+        <li>
+          <a
+            class="donateButton"
+            href="https://www.buymeacoffee.com/01founderscrack"
+            title="Donate"
+            aria-label="donate"
+          >
+            <span class="donateElement">Support Us!</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </header>
+  {{end}}
+</body>

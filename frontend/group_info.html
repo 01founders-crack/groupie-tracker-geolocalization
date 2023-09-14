@@ -1,0 +1,43 @@
+{{define "group_info"}}
+<section class="idMain">
+  <div class="idInfo">
+    <div class="idImgContainer">
+      <img
+        class="idImg"
+        src="{{.Image}}"
+        alt="Artist Photo"
+        height="400px"
+        width="400px"
+      />
+      <div class="idImgText">
+        <span
+          >Founded: {{.CreationDate}} <br />
+          Debut Album: {{.FirstAlbum}}</span
+        >
+      </div>
+    </div>
+
+    <div class="idTextContainer">
+      <h2 class="idMembers">Members:</h2>
+      <ul class="artistMembers">
+        {{range $member := .Members}}
+        <li>{{$member}}</li>
+        {{end}}
+      </ul>
+      <h2 class="idTourDates">Tour Dates:</h2>
+      <ul class="tourDates">
+        {{range $location, $dates := .DatesLocations}}
+        <li>
+          {{$location}}:<br />
+          <ul>
+            {{range $a := $dates}}
+            <li>{{$a}}</li>
+            {{end}}
+          </ul>
+        </li>
+        {{end}}
+      </ul>
+    </div>
+  </div>
+</section>
+{{end}}
