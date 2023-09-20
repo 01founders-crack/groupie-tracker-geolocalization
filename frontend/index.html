@@ -1,10 +1,21 @@
+<!-- HTML Part -->
 {{define "title"}} Groupie Tracker {{end}} {{define "content"}}
 
 <section class="searchBar">
-  <input type="text" id="artistSearch" placeholder="Search for an artist..." />
-  <button>Search</button>
+  <input
+    type="text"
+    id="artistSearch"
+    placeholder="Search for an artist..."
+    onkeyup="myFunction()"
+    list="artistSuggestions"
+    autocomplete="off"
+  />
+  <datalist id="artistSuggestions">
+    <!-- Datalist for suggestions -->
+    <!-- Options will be populated dynamically by JavaScript -->
+  </datalist>
 </section>
 
 <section class="s2">{{template "music_card" .}}</section>
-
+<script src="/scripts/searchBar.js"></script>
 {{end}}
