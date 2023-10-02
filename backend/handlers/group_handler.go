@@ -30,16 +30,10 @@ func HandleGroup(w http.ResponseWriter, r *http.Request) {
 		// fmt.Println(len(combinedData.RelationsData), "::::::::", len(combinedData.Artists), "::::::::END")
 		var tempRelations map[string][]string
 		var tempArtist models.Artist
-		for i := 1; i < len(combinedData.RelationsData); i++ {
-			relData := combinedData.RelationsData[i]
-			if strconv.Itoa(relData.ID) == artistID {
-				tempRelations = relData.DatesLocations
-
-			}
-		}
 		for _, artist := range combinedData.Artists {
 			if strconv.Itoa(artist.ID) == artistID {
 				tempArtist = artist
+				tempRelations = combinedData.RelationsData[artist.ID].DatesLocations
 			}
 		}
 
