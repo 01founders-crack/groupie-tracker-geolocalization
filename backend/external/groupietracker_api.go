@@ -31,27 +31,12 @@ func GetArtistsWithRelations() (*models.CombinedData, error) {
 	}
 
 	relationsMap := make(map[int]*models.Relations)
-	relationsChannel := make(chan *models.Relations, len(artists))
-	errorChannel := make(chan error, len(artists))
-
 	for i := range artists {
-		go func(artist models.Artist) {
-			relations, err := GetRelations(artist.Relations)
-			if err != nil {
-				errorChannel <- err
-				return
-			}
-			relationsChannel <- relations
-		}(artists[i])
-	}
-
-	for i := 0; i < len(artists); i++ {
-		select {
-		case err := <-errorChannel:
+		relations, err := GetRelations(artists[i].Relations)
+		if err != nil {
 			return nil, err
-		case relations := <-relationsChannel:
-			relationsMap[artists[i].ID] = relations
 		}
+		relationsMap[artists[i].ID] = relations
 	}
 
 	combinedData := &models.CombinedData{
@@ -61,7 +46,6 @@ func GetArtistsWithRelations() (*models.CombinedData, error) {
 
 	return combinedData, nil
 }
-
 
 func GetRelations(url string) (*models.Relations, error) {
 	response, err := http.Get(url)
