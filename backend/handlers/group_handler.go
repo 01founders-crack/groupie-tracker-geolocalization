@@ -26,12 +26,19 @@ func HandleGroup(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Failed to retrieve data", http.StatusInternalServerError)
 			return
 		}
-
+		// fmt.Println(combinedData.RelationsData[1].ID)
+		// fmt.Println(len(combinedData.RelationsData), "::::::::", len(combinedData.Artists), "::::::::END")
 		var tempRelations map[string][]string
 		var tempArtist models.Artist
+		for i := 1; i < len(combinedData.RelationsData); i++ {
+			relData := combinedData.RelationsData[i]
+			if strconv.Itoa(relData.ID) == artistID {
+				tempRelations = relData.DatesLocations
+
+			}
+		}
 		for _, artist := range combinedData.Artists {
 			if strconv.Itoa(artist.ID) == artistID {
-				tempRelations = combinedData.RelationsData[artist.ID].DatesLocations
 				tempArtist = artist
 			}
 		}
